@@ -60,6 +60,7 @@ public class Login extends HttpServlet {
         
         
         response.getWriter().println("<h1>Metodo GET</h1>");
+        response.getWriter().println("<p>Hola "+request.getParameter("user")+"</p>");
         processRequest(request, response);
     }
 
