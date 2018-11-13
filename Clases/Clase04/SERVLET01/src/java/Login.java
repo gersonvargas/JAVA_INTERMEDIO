@@ -36,7 +36,7 @@ public class Login extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Login</title>");            
+            out.println("<title>Servlet Login</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet Login at " + request.getContextPath() + "</h1>");
@@ -57,10 +57,9 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        
+
         response.getWriter().println("<h1>Metodo GET</h1>");
-        response.getWriter().println("<p>Hola "+request.getParameter("user")+"</p>");
+        response.getWriter().println("<p>Hola " + request.getParameter("user") + "</p>");
         processRequest(request, response);
     }
 
@@ -76,6 +75,7 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.getWriter().println("<h1>Metodo POST</h1>");
+        response.getWriter().println("<p>Hola " + request.getParameter("user") + "</p>");
         processRequest(request, response);
     }
 
