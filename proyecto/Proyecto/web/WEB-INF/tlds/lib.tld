@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
+    <tlib-version>1.0</tlib-version>
+    <short-name>lib</short-name>
+    <uri>/tlds/lib</uri>
+    <function>
+        <name>getUsuariosConectadosHTML</name>
+        <function-class>Model.Modelo</function-class>
+        <function-signature>
+            java.lang.String getUsuariosConectadosHTML(int)
+        </function-signature>        
+    </function>
+       <function>
+        <name>getComentariosHTML</name>
+        <function-class>Model.Modelo</function-class>
+        <function-signature>
+            java.lang.String getComentariosHTML(int)
+        </function-signature>        
+    </function>
+    <function>
+        <name>verificarSession</name>
+        <function-class>Control.Sesion</function-class>
+        <function-signature>
+            java.lang.void verificarSession(beans.BeanSesion)
+        </function-signature>        
+    </function>
+</taglib>

@@ -37,20 +37,19 @@ public class Login extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             Modelo modelo = Modelo.getInstance();
-            BeanSesion s = (BeanSesion) request.getSession().getAttribute("sesion");
+            //BeanSesion s = (BeanSesion) request.getSession().getAttribute("sesion");
 
             String email = new String(request.getParameter("email").getBytes("ISO-8859-1"));
             String clave = new String(request.getParameter("password").getBytes("ISO-8859-1"));
             try {
                 if (modelo.verificarUsuario(email, clave)) {
 
-                    s.setEmail(email);
-                    s.setId(email);
+//                    s.setEmail(email);
+//                    s.setId(email);
                     HttpSession se = request.getSession(true);
                     se.setAttribute("valida", true);
-                    se.setMaxInactiveInterval(2 * 60);
-                    s.setAdmin(false);
-                    request.setAttribute("email", email);
+                    se.setAttribute("usuario", email);
+                    se.setMaxInactiveInterval(20 * 60);
                     request.getRequestDispatcher("Chat.jsp").forward(request, response);
                 } else {
                     request.getRequestDispatcher("Login.jsp").forward(request, response);

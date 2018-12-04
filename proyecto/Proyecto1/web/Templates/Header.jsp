@@ -21,13 +21,36 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="Chat.jsp"><i class="fa fa-envelope mr-2"></i>Chat</a>
                         </li>
-                        
+                         <%
 
+                            if (request.getSession(true).getAttribute("usuario") == null) {
+
+                        %>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="Login.jsp"><i class="fa fa-user mr-2"></i>Login</a>
+                        </li>
+                        <%} 
+                        %>
+                       
                     </ul>
                     <form class="form-inline my-2 my-md-0">
-                        <a class="navbar-brand" href="Registrarse.jsp">
-                    <img src="images/add-user.png" width="50" height="50" alt="Logo" />
-                </a>
+
+                        <%
+
+                            if (request.getSession(true).getAttribute("usuario") != null) {
+
+                        %>
+                        <a class="navbar-brand text-white" href="Logout">
+                            <img src="images/exit.png"  height="30" alt="Logo" />Logout
+                        </a>
+                        <%} else {
+                        %>
+                        <a class="navbar-brand text-white" href="Registrarse.jsp">
+                            <img src="images/add-user.png" width="50" height="50" alt="Logo" />Registrarse
+                        </a>
+                        <%
+                            }
+                        %>
                     </form>
                 </div>
             </nav>
