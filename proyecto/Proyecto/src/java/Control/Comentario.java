@@ -75,13 +75,16 @@ public class Comentario extends HttpServlet {
                 if (modelo.guardarComentario(descripcion, usuario, tipo)) {
                     request.getRequestDispatcher("Chat.jsp").forward(request, response);
                 } else {
+                      request.getSession(true).setAttribute("error", "No se ha podido ingresar el comentario.");
                     request.getRequestDispatcher("Chat.jsp").forward(request, response);
                 }
 
             } else {
+                  request.getSession(true).setAttribute("error", "No ha completado los campos!");
                 request.getRequestDispatcher("Chat.jsp").forward(request, response);
             }
         } else {
+              request.getSession(true).setAttribute("error", "No se ha inciado sesion.");
             request.getRequestDispatcher("Chat.jsp").forward(request, response);
         }
     }

@@ -40,7 +40,7 @@ public class Logout extends HttpServlet {
             HttpSession session = request.getSession();
             if (session != null) {
                 Modelo modelo = Modelo.getInstance();
-                modelo.cerrarSesion((String) request.getSession().getAttribute("usuario"));
+                modelo.cerrarSesion((String) request.getSession().getAttribute("email"));
                 session.invalidate();
             }
             request.getRequestDispatcher("Login.jsp").forward(request, response);

@@ -69,7 +69,7 @@
                                         </form>
                                     </div>
 
-                                     <div class="headind_srch">
+                                    <div class="headind_srch">
                                         <div class="recent_heading">
                                             <h4>Personal</h4>
                                         </div>                                  

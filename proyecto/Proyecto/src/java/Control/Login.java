@@ -67,8 +67,8 @@ public class Login extends HttpServlet {
         String email = new String(request.getParameter("email").getBytes("ISO-8859-1"));
         String clave = new String(request.getParameter("password").getBytes("ISO-8859-1"));
         try {
-            String nombreUsuario=modelo.verificarUsuario(email, clave);
-            if (nombreUsuario!=null) {
+            String nombreUsuario = modelo.verificarUsuario(email, clave);
+            if (nombreUsuario != null) {
 
 //                    s.setEmail(email);
 //                    s.setId(email);
@@ -80,9 +80,11 @@ public class Login extends HttpServlet {
                 se.setMaxInactiveInterval(20 * 60);
                 request.getRequestDispatcher("Chat.jsp").forward(request, response);
             } else {
+                request.getSession(true).setAttribute("error", "No se ha podido verificar el usuario!");
                 request.getRequestDispatcher("Login.jsp").forward(request, response);
             }
         } catch (Exception ex) {
+            request.getSession(true).setAttribute("error", ex.getMessage());
             request.getRequestDispatcher("Login.jsp").forward(request, response);
         }
     }

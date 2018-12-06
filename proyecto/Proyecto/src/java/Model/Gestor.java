@@ -167,8 +167,8 @@ public class Gestor implements Serializable {
         return true;
     }
 
-    public String verificarUsuario(String email, String password) {
-        try {
+    public String verificarUsuario(String email, String password) throws Exception {
+      
             Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
             PreparedStatement stm = cnx.prepareStatement(COMANDO_VERIFICAR_USUARIO);
             stm.clearParameters();
@@ -183,15 +183,10 @@ public class Gestor implements Serializable {
                 Conexion.obtenerInstancia().cerrarConexion();
                 return nombre;
             } else {
+                Conexion.obtenerInstancia().cerrarConexion();
                 return null;
             }
-        } catch (Exception ex) {
-
-            String e = ex.getMessage();
-            return null;
-        } finally {
-            Conexion.obtenerInstancia().cerrarConexion();
-        }
+       
 
     }
 

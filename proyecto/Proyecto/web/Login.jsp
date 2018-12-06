@@ -20,19 +20,28 @@
     <body>
         <jsp:useBean  id="sesion" class="beans.BeanSesion" scope="session"></jsp:useBean>
         <jsp:include page="Templates/Header.jsp"></jsp:include>
-        <div>
+            <div>
 
-            <h2 class="text-center">Login Form</h2>
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8 col-lg-6 pb-5">
-                    <!--Form with header-->
+                <h2 class="text-center">Login Form</h2>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 col-lg-6 pb-5">
+                        <!--Form with header-->
 
-                    <form action="Login" method="POST">
-                        <div class="card border-primary rounded-0">
-                            <div class="card-header p-0">
-                                <div class="bg-info text-white text-center py-2">
-                                    <h3><i class="fa fa-user"></i> CUENTA</h3>
-                                    <p class="m-0">Ingresar</p>
+                        <form action="Login" method="POST">
+                            <div class="card border-primary rounded-0">
+                                <div class="card-header p-0">
+                                    <div class="bg-info text-white text-center py-2">
+                                        <h3><i class="fa fa-user"></i> CUENTA</h3>
+                                        <p class="m-0">Ingresar</p>
+
+
+
+                                        <c:if test="${not empty error}">
+                                        <p class="alert alert-danger">${error}</p>
+
+                                    </c:if>
+
+
                                 </div>
                             </div>
                             <div class="card-body p-3">
