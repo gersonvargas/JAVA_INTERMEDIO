@@ -59,8 +59,6 @@ SELECT COMENTARIOS.*,usuarios.IMAGEN,usuarios.NAME FROM COMENTARIOS LEFT JOIN us
 select * from   usuarios;
 SELECT * FROM sesiones;
 SELECT EMAIL, NAME, TYPE, IMAGEN, PASSWORD FROM usuarios;
-delete from usuarios;
-delete from COMENTARIOS;
-commit;
+
 
 
