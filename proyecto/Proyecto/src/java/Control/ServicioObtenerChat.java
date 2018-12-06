@@ -12,13 +12,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author BDADMIN
  */
-public class Login extends HttpServlet {
+public class ServicioObtenerChat extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,7 +31,7 @@ public class Login extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -47,7 +46,11 @@ public class Login extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+       try (PrintWriter out = response.getWriter()) {
+     
+            out.println( Modelo.getInstance().getComentariosHTML(1));
+      
+        }
     }
 
     /**
@@ -61,30 +64,7 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Modelo modelo = Modelo.getInstance();
-        //BeanSesion s = (BeanSesion) request.getSession().getAttribute("sesion");
-
-        String email = new String(request.getParameter("email").getBytes("ISO-8859-1"));
-        String clave = new String(request.getParameter("password").getBytes("ISO-8859-1"));
-        try {
-            String nombreUsuario=modelo.verificarUsuario(email, clave);
-            if (nombreUsuario!=null) {
-
-//                    s.setEmail(email);
-//                    s.setId(email);
-                HttpSession se = request.getSession(true);
-                se.setAttribute("valida", true);
-                se.setAttribute("usuario", nombreUsuario);
-                se.setAttribute("email", email);
-                se.setAttribute("foto", Modelo.foto(email));
-                se.setMaxInactiveInterval(20 * 60);
-                request.getRequestDispatcher("Chat.jsp").forward(request, response);
-            } else {
-                request.getRequestDispatcher("Login.jsp").forward(request, response);
-            }
-        } catch (Exception ex) {
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**

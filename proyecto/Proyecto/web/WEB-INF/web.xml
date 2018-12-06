@@ -16,6 +16,18 @@
         <servlet-name>Sesion</servlet-name>
         <servlet-class>Control.Sesion</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServicioObtenerChat</servlet-name>
+        <servlet-class>Control.ServicioObtenerChat</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServicioUsuariosConectados</servlet-name>
+        <servlet-class>Control.ServicioUsuariosConectados</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServicioUsuarioDes</servlet-name>
+        <servlet-class>Control.ServicioUsuarioDes</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registrar</servlet-name>
         <url-pattern>/Registrar</url-pattern>
@@ -31,6 +43,18 @@
     <servlet-mapping>
         <servlet-name>Sesion</servlet-name>
         <url-pattern>/Sesion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServicioObtenerChat</servlet-name>
+        <url-pattern>/ServicioObtenerChat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServicioUsuariosConectados</servlet-name>
+        <url-pattern>/ServicioUsuariosConectados</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServicioUsuarioDes</servlet-name>
+        <url-pattern>/ServicioUsuarioDes</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

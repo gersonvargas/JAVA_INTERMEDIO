@@ -167,7 +167,7 @@ public class Gestor implements Serializable {
         return true;
     }
 
-    public boolean verificarUsuario(String email, String password) {
+    public String verificarUsuario(String email, String password) {
         try {
             Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
             PreparedStatement stm = cnx.prepareStatement(COMANDO_VERIFICAR_USUARIO);
@@ -178,16 +178,17 @@ public class Gestor implements Serializable {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 String id = rs.getString("EMAIL");
+                String nombre = rs.getString("NAME");
                 this.crearSesion(id, 1);
                 Conexion.obtenerInstancia().cerrarConexion();
-                return true;
+                return nombre;
             } else {
-                return false;
+                return null;
             }
         } catch (Exception ex) {
 
             String e = ex.getMessage();
-            return false;
+            return null;
         } finally {
             Conexion.obtenerInstancia().cerrarConexion();
         }
@@ -236,7 +237,6 @@ public class Gestor implements Serializable {
         PreparedStatement stm = cnx.prepareStatement(COMANDO_FOTO);
         stm.clearParameters();
         stm.setString(1, email);
-
         ResultSet rs = stm.executeQuery();
         if (rs.next()) {
             return rs.getString("IMAGEN");
@@ -360,7 +360,7 @@ public class Gestor implements Serializable {
                     + " GROUP BY usuarios.EMAIL "
                     + " order by (FECHA) desc;");
         } else {
-            rs = stm.executeQuery("SELECT USUARIO_ID,EMAIL,NAME,FECHA,STATUS "
+            rs = stm.executeQuery("SELECT USUARIO_ID,EMAIL,NAME,FECHA,STATUS,IMAGEN "
                     + " FROM sesiones "
                     + " left join usuarios "
                     + " ON usuarios.EMAIL = sesiones.USUARIO_ID "
@@ -378,8 +378,8 @@ public class Gestor implements Serializable {
                 "NICKNAME"));
         r.append(String.format("</th><th>%s</th>",
                 "FECHA"));
-        r.append(String.format("</th><th>%s</th>",
-                "COMENTAR"));
+        // r.append(String.format("</th><th>%s</th>",
+        //       "COMENTAR"));
         r.append(String.format("</th><th>%s</th></tr>",
                 "VER"));
         while (rs.next()) {
@@ -392,19 +392,7 @@ public class Gestor implements Serializable {
                     String.format("<img alt=\"(status icon)\" src=\"%s\" />",
                             p == 1 ? "icons/status-online.png" : "icons/status-busy.png")));
             r.append(String.format("<td>%s</td>", name));
-            String aux = "<form method='POST' action='ComentarioPersonal'>"
-                    + "<input type='hidden' name='usuario_para'  value='" + email + "'/>"
-                    + " <div class='form-group'>"
-                    + "      <div class='input-group mb-2'>"
-                    + "          <input type='text' class='form-control' id='comentario' name='comentario' placeholder='Comentar' required> "
-                    + "             <div class='input-group-prepend'>"
-                    + "                   <div class='input-group-text'>"
-                    + "                         <button type='submit'><i class='fa fa-paper-plane-o text-info'></i></button>"
-                    + "                    </div>"
-                    + "             </div>"
-                    + "      </div>"
-                    + "</div>"
-                    + "</form>";
+
             String aux2 = "<form method='POST' action='Chat.jsp'>"
                     + "<input type='hidden' name='usuario_para'  value='" + email + "'/>"
                     + " <div class='form-group'>"
@@ -418,7 +406,7 @@ public class Gestor implements Serializable {
                     + "</div>"
                     + "</form>";
             r.append(String.format("<td><span class='chat_date'>%s</span></td>", fecha));
-            r.append(String.format("<td><span class='chat_date'>%s</span></td>", aux));
+            //           r.append(String.format("<td><span class='chat_date'>%s</span></td>", aux));
             r.append(String.format("<td><span class='chat_date'>%s</span></td>", aux2));
             r.append("</tr>");
         }
@@ -433,7 +421,7 @@ public class Gestor implements Serializable {
         ResultSet rs = null;
 
         if (p == 1) {
-            rs = stm.executeQuery("SELECT * FROM COMENTARIOS WHERE TIPO_MSJ=1;");
+            rs = stm.executeQuery("SELECT COMENTARIOS.*,usuarios.IMAGEN,usuarios.NAME FROM COMENTARIOS LEFT JOIN usuarios ON usuarios.EMAIL = comentarios.USUARIO_ID WHERE TIPO_MSJ=1 ORDER BY comentarios.FECHA;");
         } else {
             rs = stm.executeQuery("SELECT * FROM COMENTARIOS WHERE TIPO_MSJ!=1;");
         }
@@ -443,9 +431,9 @@ public class Gestor implements Serializable {
         while (rs.next()) {
             r.append("<div class='chat_list'>");
             r.append("<div class='chat_people active_chat'>");
-            r.append("<div class='chat_img'> <img src='https://ptetutorials.com/images/user-profile.png' alt='sunil'> </div>");
+            r.append("<div class='chat_img'> <img src='" + rs.getString("IMAGEN") + "' alt='sunil'> </div>");
             r.append("<div class='chat_ib'>");
-            r.append("<h5>" + rs.getString("USUARIO_ID") + " <span class='chat_date'>" + rs.getString("FECHA") + "</span></h5>");
+            r.append("<h5>" + rs.getString("NAME") + " <span class='chat_date'>" + rs.getString("FECHA") + "</span></h5>");
             r.append("<p>" + rs.getString("DESCRIPCION") + "</p>");
             r.append("</div>");
             r.append("</div>");
@@ -456,6 +444,46 @@ public class Gestor implements Serializable {
     }
 
     public static String getComentariosPersonalesHTML(String usuario_de, String usuario_para) throws Exception {
+        Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
+
+        PreparedStatement stm = cnx.prepareStatement("select COMENTARIO_ID, DESCRIPCION, FECHA, USUARIO_DE, USUARIO_PARA, TIPO_MSJ,USUARIOS.NAME,usuarios.IMAGEN FROM comentarios_personales left join usuarios ON usuarios.EMAIL = comentarios_personales.USUARIO_DE "
+                + " where (USUARIO_DE=? and USUARIO_PARA=?) or (USUARIO_DE=? and USUARIO_PARA=?) ORDER BY FECHA DESC;");
+        stm.clearParameters();
+        stm.setString(1, usuario_de);
+        stm.setString(2, usuario_para);
+        stm.setString(3, usuario_para);
+        stm.setString(4, usuario_de);
+        ResultSet rs = null;
+        rs = stm.executeQuery();
+        StringBuilder r = new StringBuilder();
+
+        while (rs.next()) {
+            r.append("<div class='chat_list'>");
+            r.append("<div class='chat_people active_chat'>");
+            r.append("<div class='chat_img'> <img src='" + rs.getString("IMAGEN") + "' alt='sunil'> </div>");
+            r.append("<div class='chat_ib'>");
+            r.append("<h5> " + rs.getString("USUARIO_DE") + " <span class='chat_date'>" + rs.getString("FECHA") + "</span></h5>");
+            r.append("<p>" + rs.getString("DESCRIPCION") + "</p>");
+            r.append("</div>");
+            r.append("</div>");
+            r.append("</div>");
+        }
+        if (usuario_de != null && !usuario_de.equals(usuario_para)) {
+            String aux = "<div class='type_msg'>"
+                    + " <form method='POST' action='ComentarioPersonal'>"                    
+                    + " <div class='input_msg_write'>"
+                    + "         <input type='hidden' name='usuario_para'  value='" + usuario_para + "'/>"
+                    + "          <textarea class='form-control'  name='comentario' placeholder='Comentar' required></textarea> "
+                    + "          <button class='msg_send_btn' type='submit'><i class='fa fa-paper-plane-o text-info'></i></button>"
+                    + "      </div>"
+                    + "</form>"
+                    + "</div>";
+            r.append(aux);
+        }
+        return r.toString();
+    }
+
+    public static String getComentariosPersonalesSinFormHTML(String usuario_de, String usuario_para) throws Exception {
         Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
 
         PreparedStatement stm = cnx.prepareStatement("select COMENTARIO_ID, DESCRIPCION, FECHA, USUARIO_DE, USUARIO_PARA, TIPO_MSJ FROM comentarios_personales\n"
@@ -499,33 +527,4 @@ public class Gestor implements Serializable {
 
     }
 
-    public boolean actualizarNoticia(String titulo, String descripcion, String email, int numero) throws Exception {
-
-        Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
-        PreparedStatement stm = cnx.prepareStatement(COMANDO_ACTUALIZAR_NOTICIA);
-
-        stm.clearParameters();
-        stm.setString(1, titulo);
-        stm.setString(2, descripcion);
-        stm.setString(3, email);
-        stm.setTimestamp(4, new Timestamp(Calendar.getInstance().getTimeInMillis()));
-        stm.setInt(5, numero);
-        if (stm.executeUpdate() != 1) {
-            return false;
-        }
-        Conexion.obtenerInstancia().cerrarConexion();
-        return true;
-    }
-
-    public boolean eliminarNoticias(int numero) throws Exception {
-        Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
-        PreparedStatement stm = cnx.prepareStatement("delete from noticia where numero=?;");
-        stm.clearParameters();
-        stm.setInt(1, numero);
-        if (stm.executeUpdate() != 1) {
-            return false;
-        }
-        Conexion.obtenerInstancia().cerrarConexion();
-        return true;
-    }
 }

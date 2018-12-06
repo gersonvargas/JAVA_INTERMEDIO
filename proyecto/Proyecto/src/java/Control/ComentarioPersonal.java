@@ -40,7 +40,7 @@ public class ComentarioPersonal extends HttpServlet {
             Modelo modelo = Modelo.getInstance();
 
             String descripcion = new String(request.getParameter("comentario").getBytes("ISO-8859-1"));
-            String usuario_de = (String) request.getSession().getAttribute("usuario");
+            String usuario_de = (String) request.getSession().getAttribute("email");
             String usuario_para = new String(request.getParameter("usuario_para").getBytes("ISO-8859-1"));
             if (!usuario_de.equals(usuario_para)) {
                 if (modelo.guardarComentarioPersonal(descripcion, usuario_de, usuario_para)) {

@@ -33,28 +33,7 @@ public class Comentario extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession(true);
-        if (session != null) {
-            Modelo modelo = Modelo.getInstance();
-            BeanSesion s = (BeanSesion) request.getSession().getAttribute("sesion");
 
-            String descripcion = new String(request.getParameter("descripcion").getBytes("ISO-8859-1"));
-            int tipo = Integer.parseInt(request.getParameter("tipo"));
-
-            String usuario = (String) request.getSession(true).getAttribute("usuario");
-            if (descripcion != null && usuario != null) {
-                if (modelo.guardarComentario(descripcion, usuario, tipo)) {
-                    request.getRequestDispatcher("Chat.jsp").forward(request, response);
-                } else {
-                    request.getRequestDispatcher("Chat.jsp").forward(request, response);
-                }
-
-            } else {
-                request.getRequestDispatcher("Chat.jsp").forward(request, response);
-            }
-        } else {
-            request.getRequestDispatcher("Chat.jsp").forward(request, response);
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -83,7 +62,28 @@ public class Comentario extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession(true);
+        if (session != null) {
+             Modelo modelo = Modelo.getInstance();
+            BeanSesion s = (BeanSesion) request.getSession().getAttribute("sesion");
+
+            String descripcion = request.getParameter("descripcion");
+            int tipo = Integer.parseInt(request.getParameter("tipo"));
+
+            String usuario = (String) request.getSession(true).getAttribute("email");
+            if (descripcion != null && usuario != null) {
+                if (modelo.guardarComentario(descripcion, usuario, tipo)) {
+                    request.getRequestDispatcher("Chat.jsp").forward(request, response);
+                } else {
+                    request.getRequestDispatcher("Chat.jsp").forward(request, response);
+                }
+
+            } else {
+                request.getRequestDispatcher("Chat.jsp").forward(request, response);
+            }
+        } else {
+            request.getRequestDispatcher("Chat.jsp").forward(request, response);
+        }
     }
 
     /**

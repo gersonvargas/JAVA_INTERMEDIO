@@ -1,11 +1,8 @@
 package Model;
 
-import beans.BeanSesion;
 import java.io.Serializable;
 
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Modelo implements Serializable {
 
@@ -36,15 +33,13 @@ public class Modelo implements Serializable {
         }
     }
 
-    public void deleteNew(int n) throws Exception {
-        gestor.eliminarNoticias(n);
-    }
+    
 
     public boolean guardarUsuario(String email, String nombre, String p_id, int type, String ruta_img, String pass) throws Exception {
         return gestor.guardarUsuario(email, nombre, p_id, type,ruta_img, pass);
     }
 
-    public boolean verificarUsuario(String email, String password) throws Exception {
+    public String verificarUsuario(String email, String password) throws Exception {
         return gestor.verificarUsuario(email, password);
     }
 
@@ -89,24 +84,6 @@ public class Modelo implements Serializable {
 
     public void eliminarIngreso(String usuario) throws Exception {
         gestor.eliminarIngreso(usuario);
-    }
-
-    public boolean elinarNoticia(int numero) {
-        try {
-            gestor.eliminarNoticias(numero);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    public boolean actualizarNoticia(String titulo, String descripcion, String email, int numero) {
-        try {
-            return gestor.actualizarNoticia(titulo, descripcion, email, numero);
-        } catch (Exception e) {
-            String a = e.getMessage();
-            return false;
-        }
     }
 
     public static int getNumeroUsuarios() {
