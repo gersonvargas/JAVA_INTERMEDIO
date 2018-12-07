@@ -119,8 +119,8 @@ public class Modelo implements Serializable {
         }
     }
 
-    public boolean guardarComentario(String desc, String usuario, int tipo) {
-        return gestor.guardarComentario(desc, usuario, tipo);
+    public boolean guardarComentario(String desc, String usuario, int tipo, String direccionImagen) {
+        return gestor.guardarComentario(desc, usuario, tipo,direccionImagen);
     }
 
     public boolean guardarComentarioPersonal(String desc, String usuario_de, String usuario_para) {

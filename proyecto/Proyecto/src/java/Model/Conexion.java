@@ -44,14 +44,10 @@ public class Conexion implements Serializable {
     }
 
     public synchronized Connection obtenerConexion() throws Exception {
-        try {
+        
             Class.forName("com.mysql.jdbc.Driver");
             cnx = DriverManager.getConnection(protocolo + url + baseDatos, usuario, clave);
-        } catch ( SQLException exc) {
-            System.out.println(exc.getMessage());
-        } finally {
-            // cnx.close();
-        }
+       
         return cnx;
     }
 

@@ -60,12 +60,18 @@
                                         ${lib:getComentariosHTML(1)}
                                     </div>
                                     <div class="type_msg">
-                                        <form action="Comentario" method="POST">
+                                        <form action="Comentario" class="form-horizontal" role="form" enctype="multipart/form-data" method="POST" >
+
                                             <div class="input_msg_write">
-                                                <input type="number" value="1" name="tipo" hidden></inpu>
-                                                <textarea class="form-control"  name="descripcion" placeholder="Comentar" required></textarea>
+                                                <input type="number" value="1" name="tipo" hidden/>
+                                                <input  class="form-control btn-sm" type="file" accept="image/*" id="route" name="route" placeholder="Imagen"/> 
+
+                                                <textarea class="form-control"  name="descripcion" placeholder="Comentar"></textarea>
+
                                                 <button class="msg_send_btn" type="submit"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+
                                             </div>
+
                                         </form>
                                     </div>
 

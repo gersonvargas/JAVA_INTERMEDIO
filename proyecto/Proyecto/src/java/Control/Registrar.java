@@ -66,8 +66,8 @@ public class Registrar extends HttpServlet {
                 ((UploadFile) mrequest.getFiles().get("route")).setFileName(nombreImagen);
                 UploadFile file = (UploadFile) files.get("route");
                 String direccionImagen = "UserImages/" + file.getFileName();
-                String ruta = direccionImagen;
-                if (registrar(email, nombre, id, 0, ruta, clave)) {                  
+                
+                if (registrar(email, nombre, id, 0, direccionImagen, clave)) {                  
                         upBean.store(mrequest, "route");
                     
                     HttpSession se = request.getSession(true);

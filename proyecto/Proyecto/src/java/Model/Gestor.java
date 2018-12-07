@@ -26,8 +26,8 @@ public class Gestor implements Serializable {
             + "VALUES (?,?);";
     private static final String COMANDO_INSERTAR_COMENTARIO
             = "INSERT INTO COMENTARIOS"
-            + "(DESCRIPCION,USUARIO_ID,TIPO_MSJ) "
-            + "VALUES (?,?,?);";
+            + "(DESCRIPCION,USUARIO_ID,TIPO_MSJ,IMAGEN) "
+            + "VALUES (?,?,?,?);";
     private static final String COMANDO_INSERTAR_COMENTARIO_PRIVADO
             = "INSERT INTO COMENTARIOS_PERSONALES"
             + "(DESCRIPCION,USUARIO_DE,USUARIO_PARA) "
@@ -119,7 +119,7 @@ public class Gestor implements Serializable {
         return true;
     }
 
-    public boolean guardarComentario(String desc, String usuario, int tipo) {
+    public boolean guardarComentario(String desc, String usuario, int tipo, String direccionImagen) {
         try {
 
             Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
@@ -129,7 +129,7 @@ public class Gestor implements Serializable {
             stm.setString(1, desc);
             stm.setString(2, usuario);
             stm.setInt(3, tipo);
-
+            stm.setString(4, direccionImagen);
             if (stm.executeUpdate() != 1) {
                 return false;
             }
@@ -168,25 +168,24 @@ public class Gestor implements Serializable {
     }
 
     public String verificarUsuario(String email, String password) throws Exception {
-      
-            Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
-            PreparedStatement stm = cnx.prepareStatement(COMANDO_VERIFICAR_USUARIO);
-            stm.clearParameters();
-            stm.setString(1, email);
-            stm.setString(2, password);
 
-            ResultSet rs = stm.executeQuery();
-            if (rs.next()) {
-                String id = rs.getString("EMAIL");
-                String nombre = rs.getString("NAME");
-                this.crearSesion(id, 1);
-                Conexion.obtenerInstancia().cerrarConexion();
-                return nombre;
-            } else {
-                Conexion.obtenerInstancia().cerrarConexion();
-                return null;
-            }
-       
+        Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
+        PreparedStatement stm = cnx.prepareStatement(COMANDO_VERIFICAR_USUARIO);
+        stm.clearParameters();
+        stm.setString(1, email);
+        stm.setString(2, password);
+
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            String id = rs.getString("EMAIL");
+            String nombre = rs.getString("NAME");
+            this.crearSesion(id, 1);
+            Conexion.obtenerInstancia().cerrarConexion();
+            return nombre;
+        } else {
+            Conexion.obtenerInstancia().cerrarConexion();
+            return null;
+        }
 
     }
 
@@ -416,7 +415,7 @@ public class Gestor implements Serializable {
         ResultSet rs = null;
 
         if (p == 1) {
-            rs = stm.executeQuery("SELECT COMENTARIOS.*,usuarios.IMAGEN,usuarios.NAME FROM COMENTARIOS LEFT JOIN usuarios ON usuarios.EMAIL = comentarios.USUARIO_ID WHERE TIPO_MSJ=1 ORDER BY comentarios.FECHA;");
+            rs = stm.executeQuery("SELECT COMENTARIOS.*,usuarios.IMAGEN USER,usuarios.NAME FROM COMENTARIOS LEFT JOIN usuarios ON usuarios.EMAIL = comentarios.USUARIO_ID WHERE TIPO_MSJ=1 ORDER BY comentarios.FECHA;");
         } else {
             rs = stm.executeQuery("SELECT * FROM COMENTARIOS WHERE TIPO_MSJ!=1;");
         }
@@ -426,10 +425,13 @@ public class Gestor implements Serializable {
         while (rs.next()) {
             r.append("<div class='chat_list'>");
             r.append("<div class='chat_people active_chat'>");
-            r.append("<div class='chat_img'> <img src='" + rs.getString("IMAGEN") + "' alt='sunil'> </div>");
+            r.append("<div class='chat_img'> <img src='" + rs.getString("USER") + "' alt='User'/> </div>");
             r.append("<div class='chat_ib'>");
             r.append("<h5>" + rs.getString("NAME") + " <span class='chat_date'>" + rs.getString("FECHA") + "</span></h5>");
             r.append("<p>" + rs.getString("DESCRIPCION") + "</p>");
+            String image=rs.getString("IMAGEN");
+            if(image!=null)
+             r.append("<div class='chat_img'><a target='_blank' href='"+image+"'> <img src='" + image + "' alt='adjunto'/></a> </div>");
             r.append("</div>");
             r.append("</div>");
             r.append("</div>");
@@ -465,7 +467,7 @@ public class Gestor implements Serializable {
         }
         if (usuario_de != null && !usuario_de.equals(usuario_para)) {
             String aux = "<div class='type_msg'>"
-                    + " <form method='POST' action='ComentarioPersonal'>"                    
+                    + " <form method='POST' action='ComentarioPersonal'>"
                     + " <div class='input_msg_write'>"
                     + "         <input type='hidden' name='usuario_para'  value='" + usuario_para + "'/>"
                     + "          <textarea class='form-control'  name='comentario' placeholder='Comentar' required></textarea> "

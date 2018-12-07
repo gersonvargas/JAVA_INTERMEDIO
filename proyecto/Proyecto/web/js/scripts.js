@@ -4,7 +4,7 @@ function inicializar() {
 }
 function f1() {
     actualizar();
-    setTimeout(f1, 2000);
+    setTimeout(f1, 61000);
 }
 function actualizar() {
     loadText(function (textoTabla) {
@@ -23,7 +23,7 @@ function obtenerUsuariosConectados() {
 }
 function fusuarios() {
     actualizarUsuarios();
-    setTimeout(fusuarios, 2000);
+    setTimeout(fusuarios, 61000);
 }
 function actualizarUsuarios() {
     loadText(function (textoTabla) {
