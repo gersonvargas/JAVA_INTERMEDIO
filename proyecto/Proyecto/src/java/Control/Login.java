@@ -77,7 +77,7 @@ public class Login extends HttpServlet {
                 se.setAttribute("usuario", nombreUsuario);
                 se.setAttribute("email", email);
                 se.setAttribute("foto", Modelo.foto(email));
-                se.setMaxInactiveInterval(20 * 60);
+                se.setMaxInactiveInterval(4 * 60);
                 request.getRequestDispatcher("Chat.jsp").forward(request, response);
             } else {
                 request.getSession(true).setAttribute("error", "No se ha podido verificar el usuario!");

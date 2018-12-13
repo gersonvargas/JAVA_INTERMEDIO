@@ -33,10 +33,8 @@ public class Modelo implements Serializable {
         }
     }
 
-    
-
     public boolean guardarUsuario(String email, String nombre, String p_id, int type, String ruta_img, String pass) throws Exception {
-        return gestor.guardarUsuario(email, nombre, p_id, type,ruta_img, pass);
+        return gestor.guardarUsuario(email, nombre, p_id, type, ruta_img, pass);
     }
 
     public String verificarUsuario(String email, String password) throws Exception {
@@ -120,10 +118,10 @@ public class Modelo implements Serializable {
     }
 
     public boolean guardarComentario(String desc, String usuario, int tipo, String direccionImagen) {
-        return gestor.guardarComentario(desc, usuario, tipo,direccionImagen);
+        return gestor.guardarComentario(desc, usuario, tipo, direccionImagen);
     }
 
-    public boolean guardarComentarioPersonal(String desc, String usuario_de, String usuario_para) {
-        return gestor.guardarComentarioPersonal(desc, usuario_de, usuario_para);
+    public boolean guardarComentarioPersonal(String desc, String usuario_de, String usuario_para, String ruta) throws Exception {
+        return gestor.guardarComentarioPersonal(desc, usuario_de, usuario_para, ruta);
     }
 }

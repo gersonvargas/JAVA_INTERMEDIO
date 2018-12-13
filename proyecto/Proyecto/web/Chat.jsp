@@ -74,8 +74,8 @@
 
                                         </form>
                                     </div>
-
-                                    <div class="headind_srch">
+                                    <hr>
+                                    <div class="headind_srch mt-3">
                                         <div class="recent_heading">
                                             <h4>Personal</h4>
                                         </div>                                  

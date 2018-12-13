@@ -30,8 +30,8 @@ public class Gestor implements Serializable {
             + "VALUES (?,?,?,?);";
     private static final String COMANDO_INSERTAR_COMENTARIO_PRIVADO
             = "INSERT INTO COMENTARIOS_PERSONALES"
-            + "(DESCRIPCION,USUARIO_DE,USUARIO_PARA) "
-            + "VALUES (?,?,?);";
+            + "(DESCRIPCION,USUARIO_DE,USUARIO_PARA,IMAGEN) "
+            + "VALUES (?,?,?,?);";
 
     private static final String COMANDO_ACTUALIZAR_USUARIO
             = "UPDATE Usuario SET "
@@ -143,27 +143,21 @@ public class Gestor implements Serializable {
         return true;
     }
 
-    public boolean guardarComentarioPersonal(String desc, String usuario_de, String usuario_para) {
-        try {
+    public boolean guardarComentarioPersonal(String desc, String usuario_de, String usuario_para, String ruta) throws Exception {
 
-            Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
+        Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
 
-            PreparedStatement stm = cnx.prepareStatement(COMANDO_INSERTAR_COMENTARIO_PRIVADO);
-            stm.clearParameters();
-            stm.setString(1, desc);
-            stm.setString(2, usuario_de);
-            stm.setString(3, usuario_para);
-
-            if (stm.executeUpdate() != 1) {
-                return false;
-            }
-        } catch (Exception ex) {
-            String m = ex.getMessage();
-            return false;
-        } finally {
+        PreparedStatement stm = cnx.prepareStatement(COMANDO_INSERTAR_COMENTARIO_PRIVADO);
+        stm.clearParameters();
+        stm.setString(1, desc);
+        stm.setString(2, usuario_de);
+        stm.setString(3, usuario_para);
+        stm.setString(4, ruta);
+        if (stm.executeUpdate() != 1) {
             Conexion.obtenerInstancia().cerrarConexion();
+            return false;
         }
-
+        Conexion.obtenerInstancia().cerrarConexion();
         return true;
     }
 
@@ -429,9 +423,10 @@ public class Gestor implements Serializable {
             r.append("<div class='chat_ib'>");
             r.append("<h5>" + rs.getString("NAME") + " <span class='chat_date'>" + rs.getString("FECHA") + "</span></h5>");
             r.append("<p>" + rs.getString("DESCRIPCION") + "</p>");
-            String image=rs.getString("IMAGEN");
-            if(image!=null)
-             r.append("<div class='chat_img'><a target='_blank' href='"+image+"'> <img src='" + image + "' alt='adjunto'/></a> </div>");
+            String image = rs.getString("IMAGEN");
+            if (image != null) {
+                r.append("<div class='chat_img'><a target='_blank' href='" + image + "'> <img src='" + image + "' alt='adjunto'/></a> </div>");
+            }
             r.append("</div>");
             r.append("</div>");
             r.append("</div>");
@@ -443,7 +438,7 @@ public class Gestor implements Serializable {
     public static String getComentariosPersonalesHTML(String usuario_de, String usuario_para) throws Exception {
         Connection cnx = Conexion.obtenerInstancia().obtenerConexion();
 
-        PreparedStatement stm = cnx.prepareStatement("select COMENTARIO_ID, DESCRIPCION, FECHA, USUARIO_DE, USUARIO_PARA, TIPO_MSJ,USUARIOS.NAME,usuarios.IMAGEN FROM comentarios_personales left join usuarios ON usuarios.EMAIL = comentarios_personales.USUARIO_DE "
+        PreparedStatement stm = cnx.prepareStatement("select COMENTARIO_ID, DESCRIPCION, FECHA, USUARIO_DE, USUARIO_PARA, TIPO_MSJ, comentarios_personales.IMAGEN,USUARIOS.NAME,usuarios.IMAGEN USUARIO FROM comentarios_personales left join usuarios ON usuarios.EMAIL = comentarios_personales.USUARIO_DE "
                 + " where (USUARIO_DE=? and USUARIO_PARA=?) or (USUARIO_DE=? and USUARIO_PARA=?) ORDER BY FECHA DESC;");
         stm.clearParameters();
         stm.setString(1, usuario_de);
@@ -457,20 +452,25 @@ public class Gestor implements Serializable {
         while (rs.next()) {
             r.append("<div class='chat_list'>");
             r.append("<div class='chat_people active_chat'>");
-            r.append("<div class='chat_img'> <img src='" + rs.getString("IMAGEN") + "' alt='sunil'> </div>");
+            r.append("<div class='chat_img'> <img src='" + rs.getString("USUARIO") + "' alt='sunil'> </div>");
             r.append("<div class='chat_ib'>");
             r.append("<h5> " + rs.getString("USUARIO_DE") + " <span class='chat_date'>" + rs.getString("FECHA") + "</span></h5>");
             r.append("<p>" + rs.getString("DESCRIPCION") + "</p>");
+             String image = rs.getString("IMAGEN");
+            if (image != null) {
+                r.append("<div class='chat_img'><a target='_blank' href='" + image + "'> <img src='" + image + "' alt='adjunto'/></a> </div>");
+            }
             r.append("</div>");
             r.append("</div>");
             r.append("</div>");
         }
         if (usuario_de != null && !usuario_de.equals(usuario_para)) {
             String aux = "<div class='type_msg'>"
-                    + " <form method='POST' action='ComentarioPersonal'>"
+                    + " <form  action='ComentarioPersonal' class='form-horizontal' role='form' enctype='multipart/form-data' method='POST' >"
                     + " <div class='input_msg_write'>"
                     + "         <input type='hidden' name='usuario_para'  value='" + usuario_para + "'/>"
-                    + "          <textarea class='form-control'  name='comentario' placeholder='Comentar' required></textarea> "
+                    + "          <textarea class='form-control'  name='comentario' placeholder='Comentar'></textarea> "
+                    + " <input  class='form-control btn-sm' type='file' accept='image/*' id='route' name='route' placeholder='Imagen'/> "
                     + "          <button class='msg_send_btn' type='submit'><i class='fa fa-paper-plane-o text-info'></i></button>"
                     + "      </div>"
                     + "</form>"
